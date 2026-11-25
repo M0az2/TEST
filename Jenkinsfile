@@ -23,6 +23,20 @@ pipeline {
             }
         }
 
+        stage('Trivy Vulnerability Scan') {
+    steps {
+        sh '''
+            trivy image \
+              --image-src docker \
+              --scanners vuln \
+              --severity HIGH,CRITICAL \
+              --timeout 10m \
+              --exit-code 0 \
+              alpine-trivy-test:v1
+        '''
+    }
+}
+
         stage('Docker Verification') {
             steps {
                 sh 'docker --version'
